@@ -1,0 +1,299 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>SQL Injection Demo</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .container { display: flex; gap: 20px; }
+        .form-section { flex: 1; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .input-group { margin-bottom: 15px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        .credentials { background: #e9ecef; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .injection-example { background: #fff3cd; padding: 15px; border-radius: 4px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>SQL Injection Demo with Preset Credentials</h1>
+    
+    <div class="credentials">
+        <h3>Valid Credentials:</h3>
+        <p>Username: <code>admin</code><br>
+        Password: <code>secretpass123</code></p>
+    </div>
+
+    <div class="injection-example">
+        <h3>SQL Injection Example:</h3>
+        <p>Try this in username: <code>admin' --</code><br>
+        Password: <code>(anything or leave blank)</code></p>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Unsafe Login</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="unsafe-username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="unsafe-password">
+            </div>
+            <button onclick="testUnsafeLogin()">Login (Unsafe)</button>
+            <div id="unsafe-result" class="result"></div>
+        </div>
+
+        <div class="form-section">
+            <h2>Secure Login</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="safe-username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="safe-password">
+            </div>
+            <button onclick="testSafeLogin()">Login (Secure)</button>
+            <div id="safe-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Preset credentials
+        const VALID_USERNAME = 'admin';
+        const VALID_PASSWORD = 'secretpass123';
+
+        async function testUnsafeLogin() {
+            const username = document.getElementById('unsafe-username').value;
+            const password = document.getElementById('unsafe-password').value;
+            
+            // Simulating vulnerable SQL query
+            // Original query: SELECT * FROM users WHERE username='[INPUT]' AND password='[INPUT]'
+            let resultDiv = document.getElementById('unsafe-result');
+            
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                // Normal login success
+                resultDiv.innerHTML = "Login successful (Valid credentials)";
+                resultDiv.className = 'result success';
+            } 
+            else if (username.toLowerCase().includes("admin'") && username.includes("--")) {
+                // SQL injection successful
+                resultDiv.innerHTML = "Login successful (SQL Injection vulnerability exploited!)<br><br>" +
+                    "Equivalent SQL Query:<br>" +
+                    "<code>SELECT * FROM users WHERE username='admin' --' AND password='[ignored]'</code><br><br>" +
+                    "The -- makes the rest of the query a comment, bypassing the password check!";
+                resultDiv.className = 'result success';
+            }
+            else {
+                // Login failed
+                resultDiv.innerHTML = "Login failed";
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testSafeLogin() {
+            const username = document.getElementById('safe-username').value;
+            const password = document.getElementById('safe-password').value;
+            
+            let resultDiv = document.getElementById('safe-result');
+            
+            // Simulating parameterized query
+            // Using prepared statement: SELECT * FROM users WHERE username=? AND password=?
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                resultDiv.innerHTML = "Login successful (Valid credentials)";
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.innerHTML = "Login failed (Protected from SQL Injection)<br><br>" +
+                    "Using parameterized query:<br>" +
+                    "<code>SELECT * FROM users WHERE username=? AND password=?</code><br><br>" +
+                    "Special characters are safely escaped!";
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SQL Injection Types Demo</title>
+    <style>
+        body { font-family: Arial; max-width: 1000px; margin: 20px auto; padding: 20px; }
+        .container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .form-section { flex: 1; padding: 20px; border: 1px solid #ccc; border-radius: 8px; min-width: 300px; }
+        .input-group { margin-bottom: 15px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        .injection-type { background: #fff3cd; padding: 15px; margin: 10px 0; border-radius: 4px; }
+        code { background: #f8f9fa; padding: 2px 5px; border-radius: 3px; }
+        .query-display { background: #f8f9fa; padding: 10px; margin-top: 10px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>SQL Injection Types Demo</h1>
+    
+    <div class="form-section">
+        <h2>Set Valid Credentials</h2>
+        <div class="input-group">
+            <label>New Username</label>
+            <input type="text" id="new-username">
+        </div>
+        <div class="input-group">
+            <label>New Password</label>
+            <input type="password" id="new-password">
+        </div>
+        <button onclick="setCredentials()">Set Credentials</button>
+        <div id="setup-result" class="result"></div>
+    </div>
+
+    <div class="form-section">
+        <h2>Injection Types</h2>
+        <div class="input-group">
+            <label>Select Injection Type:</label>
+            <select id="injection-type" onchange="updateInjectionExample()">
+                <option value="comment">Comment-based (--)</option>
+                <option value="or">OR-based (OR 1=1)</option>
+                <option value="union">UNION-based</option>
+                <option value="always-true">Always True</option>
+                <option value="custom">Custom Input</option>
+            </select>
+        </div>
+        <div id="injection-example" class="injection-type">
+            Select an injection type to see the example
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Unsafe Login</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="unsafe-username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="unsafe-password">
+            </div>
+            <button onclick="testUnsafeLogin()">Login (Unsafe)</button>
+            <div id="unsafe-result" class="result"></div>
+            <div id="query-display" class="query-display"></div>
+        </div>
+
+        <div class="form-section">
+            <h2>Secure Login</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="safe-username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="safe-password">
+            </div>
+            <button onclick="testSafeLogin()">Login (Secure)</button>
+            <div id="safe-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const injectionExamples = {
+            'comment': {
+                example: "admin' --",
+                description: "Uses SQL comments to ignore password check",
+                query: "SELECT * FROM users WHERE username='admin' -- ' AND password='anything'"
+            },
+            'or': {
+                example: "admin' OR '1'='1",
+                description: "Uses OR condition to make WHERE clause always true",
+                query: "SELECT * FROM users WHERE username='admin' OR '1'='1' AND password='anything'"
+            },
+            'union': {
+                example: "admin' UNION SELECT 'admin', 'pass' --",
+                description: "Uses UNION to combine queries",
+                query: "SELECT * FROM users WHERE username='admin' UNION SELECT 'admin', 'pass' -- ' AND password='anything'"
+            },
+            'always-true': {
+                example: "admin' OR 1=1 --",
+                description: "Uses always true condition",
+                query: "SELECT * FROM users WHERE username='admin' OR 1=1 -- ' AND password='anything'"
+            },
+            'custom': {
+                example: "",
+                description: "Enter your own SQL injection string",
+                query: "Enter custom injection to see query"
+            }
+        };
+
+        function updateInjectionExample() {
+            const type = document.getElementById('injection-type').value;
+            const example = injectionExamples[type];
+            
+            let html = `
+                <strong>Example:</strong> <code>${example.example}</code><br>
+                <strong>Description:</strong> ${example.description}<br>
+                <strong>Resulting Query:</strong><br>
+                <code>${example.query}</code>
+            `;
+            
+            document.getElementById('injection-example').innerHTML = html;
+            if (type !== 'custom') {
+                document.getElementById('unsafe-username').value = example.example;
+            }
+        }
+
+        async function setCredentials() {
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            
+            document.getElementById('setup-result').innerHTML = "Credentials set (simulated)";
+            document.getElementById('setup-result').className = 'result success';
+        }
+
+        async function testUnsafeLogin() {
+            const username = document.getElementById('unsafe-username').value;
+            const password = document.getElementById('unsafe-password').value;
+            
+            let query = `SELECT * FROM users WHERE username='${username}' AND password='${password}'`;
+            document.getElementById('query-display').innerHTML = `<strong>Generated Query:</strong><br>${query}`;
+            
+            // Simulate SQL injection vulnerabilities
+            if (
+                username.includes("--") || 
+                username.toLowerCase().includes("or '1'='1") ||
+                username.toLowerCase().includes("or 1=1") ||
+                username.toLowerCase().includes("union select")
+            ) {
+                document.getElementById('unsafe-result').innerHTML = 
+                    "Login successful (SQL Injection worked!)";
+                document.getElementById('unsafe-result').className = 'result success';
+            } else {
+                document.getElementById('unsafe-result').innerHTML = "Login failed";
+                document.getElementById('unsafe-result').className = 'result error';
+            }
+        }
+
+        async function testSafeLogin() {
+            const username = document.getElementById('safe-username').value;
+            const password = document.getElementById('safe-password').value;
+            
+            document.getElementById('safe-result').innerHTML = 
+                "Login failed (Protected from SQL Injection)<br>" +
+                "Using parameterized query:<br>" +
+                "<code>SELECT * FROM users WHERE username=? AND password=?</code>";
+            document.getElementById('safe-result').className = 'result error';
+        }
+
+        // Initialize with first injection type
+        updateInjectionExample();
+    </script>
+</body>
+</html>
