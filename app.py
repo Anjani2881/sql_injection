@@ -4,7 +4,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return send_file('templates/demo.html')
+    # return send_file('templates/demo.html')
+    return send_file('demo.html')
+    
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
